@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ clinic_name }} Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Scrollable queue container */
+        #waiting-container {
+            max-height: 250px; /* adjust as needed */
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+<header>
+    <h1>{{ clinic_name }}</h1>
+    <div>
+        <a href="{{ url_for('dashboard', staff_name=staff_name) }}"><button>Home</button></a>
+        <a href="{{ url_for('logout') }}"><button>Logout</button></a>
+    </div>
+</header>
+
+<h2>Welcome, {{ staff_name }}</h2>
+
+<section>
+    <h3>Patient Waiting Queue</h3>
+    <div id="waiting-container">
+        <ul id="waiting-list">
+            {% for patient in patients %}
+            <li class="{% if loop.first %}current{% endif %} {% if patient.age_unit == 'months' and patient.age < 12 %}baby{% endif %}">
+                {{ patient.get_details() }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <a href="{{ url_for('next_patient', staff_name=staff_name) }}"><button>Call Next Patient</button></a>
+</section>
+
+<section>
+    <h3>Add New Patient</h3>
+    <form method="POST">
+        <input type="text" name="name" placeholder="Patient Name" required><br>
+        <input type="number" name="age" placeholder="Age" min="0" required><br>
+        <select name="age_unit" required>
+            <option value="years">Years</option>
+            <option value="months">Months</option>
+        </select><br>
+        <button type="submit">Add Patient</button>
+    </form>
+</section>
+
+<section>
+    <h3>Served Patient History</h3>
+    <ul>
+        {% for patient in served %}
+        <li class="served {% if patient.age_unit == 'months' and patient.age < 12 %}baby{% endif %}">
+            {{ loop.index }}. {{ patient.get_details() }} - Status: {{ patient.status }}
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
+<script>
+    // Auto-scroll the waiting queue to show the first/current patient
+    window.onload = function() {
+        const waitingContainer = document.getElementById('waiting-container');
+        const firstPatient = document.querySelector('#waiting-list li.current');
+        if (firstPatient) {
+            waitingContainer.scrollTop = firstPatient.offsetTop - waitingContainer.offsetTop;
+        }
+    };
+</script>
+
+</div>
+</body>
+</html>
