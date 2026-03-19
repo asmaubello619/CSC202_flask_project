@@ -37,21 +37,7 @@ pip install flask
 2. Run the app
 python app.py
 
-3. Open browser
-4. up
+3. Open browser up
 http://127.0.0.1:5000
-update 15
 
-update 1
-Update 2
-update 3
-update 4
-update 5
-update 6
-update 7
-UPDATE 8
-UPDATE 9
-update 10
-update 11
-update 12
-update 13update 14
+
